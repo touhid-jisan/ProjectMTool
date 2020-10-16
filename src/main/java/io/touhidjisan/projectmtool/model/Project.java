@@ -1,8 +1,6 @@
-package io.touhidjisan.projectmtool.domain;
+package io.touhidjisan.projectmtool.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sun.istack.NotNull;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
