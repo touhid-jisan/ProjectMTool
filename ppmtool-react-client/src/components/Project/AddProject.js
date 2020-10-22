@@ -61,6 +61,7 @@ class AddProject extends Component {
                                     name="projectName" 
                                     value={this.state.projectName} 
                                     onChange={this.onChange}/>
+                                    <p className="text-danger">{errors.projectName}</p>
                                 </div>
                                 {errors.projectName && (
                                     <div className="invalid-feedback">{errors.projectName}</div>
@@ -74,6 +75,7 @@ class AddProject extends Component {
                                     name="projectIdentifier" 
                                     value={this.state.projectIdentifier} 
                                     onChange={this.onChange}   />
+                                    <p className="text-danger">{errors.projectIdentifier}</p>
                                 </div>
                                 {errors.projectIdentifier && (
                                     <div className="invalid-feedback">{errors.projectIdentifier}</div>
