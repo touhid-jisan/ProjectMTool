@@ -1,7 +1,9 @@
 package io.touhidjisan.projectmtool.services;
 
+import io.touhidjisan.projectmtool.model.Backlog;
 import io.touhidjisan.projectmtool.model.Project;
 import io.touhidjisan.projectmtool.exceptions.ProjectIdException;
+import io.touhidjisan.projectmtool.repositories.BacklogRepository;
 import io.touhidjisan.projectmtool.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,19 +12,36 @@ import org.springframework.stereotype.Service;
 public class ProjectService {
 
     private ProjectRepository projectRepository;
+    private BacklogRepository backlogRepository;
+
+
 
     @Autowired
-    public ProjectService(ProjectRepository projectRepository) {
+    public ProjectService(ProjectRepository projectRepository, BacklogRepository backlogRepository) {
         this.projectRepository = projectRepository;
+        this.backlogRepository = backlogRepository;
     }
 
     public Project saveOrUpdateProject(Project project) {
 
+        String projectIdentifier = project.getProjectIdentifier().toUpperCase();
+
         try {
-            project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+            project.setProjectIdentifier(projectIdentifier);
+
+            if(project.getId() == null) {
+                Backlog backlog = new Backlog();
+                project.setBacklog(backlog);
+                backlog.setProject(project);
+                backlog.setProjectIdentifier(projectIdentifier);
+            }
+            if(project.getId() != null) {
+                project.setBacklog(backlogRepository.findByProjectIdentifier(projectIdentifier));
+            }
+
             return projectRepository.save(project);
         } catch (Exception e) {
-            throw new ProjectIdException("Project ID '" + project.getProjectIdentifier().toUpperCase() + "' already exists");
+            throw new ProjectIdException("Project ID '" + projectIdentifier + "' already exists");
         }
     }
 
