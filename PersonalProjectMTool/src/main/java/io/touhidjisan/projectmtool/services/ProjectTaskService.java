@@ -5,7 +5,12 @@ import io.touhidjisan.projectmtool.model.ProjectTask;
 import io.touhidjisan.projectmtool.repositories.BacklogRepository;
 import io.touhidjisan.projectmtool.repositories.ProjectTaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @Service
 public class ProjectTaskService {
@@ -46,7 +51,10 @@ public class ProjectTaskService {
         if(projectTask.getStatus() == "" || projectTask.getStatus() == null) {
             projectTask.setStatus("TO_DO");
         }
-
         return projectTaskRepository.save(projectTask);
+    }
+
+    public Iterable<ProjectTask> findBacklogById(String id) {
+        return projectTaskRepository.findByProjectIdentifierOrderByPriority(id);
     }
 }
