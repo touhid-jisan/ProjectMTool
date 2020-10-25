@@ -3,7 +3,7 @@ import {DELETE_PROJECT, GET_ERRORS, GET_PROJECT, GET_PROJECTS} from "./types";
 
 export const createProject = (project, history) => async dispatch => {
     try {
-        const res = await axios.post("/api/project", project);
+        await axios.post("/api/project", project);
         history.push("/dashboard");
         // bug fixed for update errors payload: err.response.data
         dispatch({
@@ -45,10 +45,10 @@ export const deleteProject = id => async dispatch => {
 
     if(window.confirm("Are you sure? This will delete all data related to it")) {
         await axios.delete(`/api/project/${id}`)
-    dispatch({
-        type: DELETE_PROJECT,
-        payload: id
-    })
+        dispatch({
+            type: DELETE_PROJECT,
+            payload: id
+        })
     }
 
     
