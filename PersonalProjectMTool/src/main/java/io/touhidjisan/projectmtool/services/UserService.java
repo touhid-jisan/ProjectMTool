@@ -1,5 +1,6 @@
 package io.touhidjisan.projectmtool.services;
 
+import io.touhidjisan.projectmtool.exceptions.UserNameAlreadyExistsException;
 import io.touhidjisan.projectmtool.model.User;
 import io.touhidjisan.projectmtool.repositories.UserRespository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,20 @@ public class UserService {
     }
 
     public User saveUser(User newUser) {
-        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
-        // username has to be unique (exception)
+        try {
+            newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
 
-        // make sure that password and confirmPassword match
+            // username has to be unique (exception)
+            newUser.setUsername(newUser.getUsername());
+            // make sure that password and confirmPassword match
+            // we don't persist or show the confirmPassword
+            newUser.setConfirmPassword("");
 
-        // we don't persist or show the confirmPassword
 
+            return userRespository.save(newUser);
+        } catch (Exception ex) {
+            throw new UserNameAlreadyExistsException("Username: '" + newUser.getUsername()+ "' already exists");
+        }
 
-        return userRespository.save(newUser);
     }
 }
