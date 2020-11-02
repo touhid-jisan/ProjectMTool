@@ -3,8 +3,10 @@ package io.touhidjisan.projectmtool.services;
 import io.touhidjisan.projectmtool.model.Backlog;
 import io.touhidjisan.projectmtool.model.Project;
 import io.touhidjisan.projectmtool.exceptions.ProjectIdException;
+import io.touhidjisan.projectmtool.model.User;
 import io.touhidjisan.projectmtool.repositories.BacklogRepository;
 import io.touhidjisan.projectmtool.repositories.ProjectRepository;
+import io.touhidjisan.projectmtool.repositories.UserRespository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,8 @@ public class ProjectService {
     private ProjectRepository projectRepository;
     private BacklogRepository backlogRepository;
 
-
+    // for user token
+    private UserRespository userRespository;
 
     @Autowired
     public ProjectService(ProjectRepository projectRepository, BacklogRepository backlogRepository) {
@@ -22,7 +25,10 @@ public class ProjectService {
         this.backlogRepository = backlogRepository;
     }
 
-    public Project saveOrUpdateProject(Project project) {
+    public Project saveOrUpdateProject(Project project, String username) {
+        User user = userRespository.findByUsername(username);
+        project.setUser(user);
+        project.setProjectLeader(user.getUsername());
 
         String projectIdentifier = project.getProjectIdentifier().toUpperCase();
 
